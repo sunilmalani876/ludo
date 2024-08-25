@@ -1,5 +1,5 @@
 import Board from "../assets/Resources/background/ludo1.png";
-import Blue_Token from "../assets/Resources/ui/Tokens/Blue_Token.png";
+// import Blue_Token from "../assets/Resources/ui/Tokens/Blue_Token.png";
 import Phaser from "phaser";
 
 class LudoScene extends Phaser.Scene {
@@ -9,7 +9,7 @@ class LudoScene extends Phaser.Scene {
 
   preload() {
     this.load.image("board", Board);
-    this.load.image("blue_token", Blue_Token);
+    // this.load.image("blue_token", Blue_Token);
   }
 
   create() {
@@ -24,7 +24,7 @@ class LudoScene extends Phaser.Scene {
     board.setDisplaySize(canvasWidth, canvasHeight);
 
     // Add a blue token to the scene
-    this.add.image(85, 460, "blue_token").scale = 0.5;
+    // this.add.image(85, 460, "blue_token").scale = 0.5;
   }
 }
 
