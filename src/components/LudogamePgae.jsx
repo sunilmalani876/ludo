@@ -1,17 +1,37 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unknown-property */
 import Phaser from "phaser";
-import { useEffect, useRef } from "react";
-import LudoScene from "../scene/Ludo-scene";
-import { useLudo } from "../context/ludoContect";
+import { useEffect } from "react";
+import LudoScene, {
+  setPiecePosition,
+  playerPiecesElements,
+} from "../scene/Ludo-scene";
+import { BASE_POSITIONS, PLAYERS } from "../constant";
 
 const LudogamePgae = () => {
-  const pieceRefs = useRef({});
-  const { getPiece, setPiecePosition } = useLudo();
+  const initializePlayerElements = () => {
+    playerPiecesElements.P1 = Array.from(
+      document.querySelectorAll('[player-id="P1"].player-piece')
+    );
+    playerPiecesElements.P2 = Array.from(
+      document.querySelectorAll('[player-id="P2"].player-piece')
+    );
+  };
+
+  const Position = () => {
+    // console.log("Reset game");
+
+    const currentPositions = BASE_POSITIONS;
+
+    PLAYERS.forEach((player) => {
+      [0, 1, 2, 3].forEach((piece) => {
+        setPiecePosition(player, piece, currentPositions[player][piece]);
+      });
+    });
+  };
 
   const config = {
-    width: 550,
-    height: 550,
+    width: 450,
+    height: 450,
     type: Phaser.AUTO,
     parent: "phaser-game",
     scene: LudoScene,
@@ -20,7 +40,11 @@ const LudogamePgae = () => {
   useEffect(() => {
     const game = new Phaser.Game(config);
 
-    getPiece(pieceRefs.current);
+    // Delay the initialization slightly to ensure DOM is ready
+    requestAnimationFrame(() => {
+      initializePlayerElements();
+      Position(); // Call after DOM elements are referenced
+    });
 
     return () => {
       game.destroy(true);
@@ -30,80 +54,30 @@ const LudogamePgae = () => {
   return (
     <div className="w-full min-h-screen flex justify-center items-center">
       <div id="phaser-game" className="relative">
-        <div className="w-full h-full">
-          {/* player 1 */}
-          {[
-            {
-              bottom: "8.1rem",
-              left: "68px",
-            },
-            {
-              bottom: "8.1rem",
-              left: "8.2rem",
-            },
-            {
-              bottom: "4.5rem",
-              left: "68px",
-            },
-            {
-              bottom: "4.5rem",
-              left: "8.2rem",
-            },
-          ].map(({ bottom, left }, index) => (
+        <div className="player-pieces w-full h-full">
+          {[0, 1, 2, 3].map((number, index) => (
             <div
-              // onClick={() => setPiecePosition("P1", index, 1)}
-              // ref={(el) => (pieceRefs.current[index] = el)}
               key={index}
               player-id="P1"
-              className={`bg-sky-500 absolute size-8 border-2 rounded-full border-black border-dashed`}
-              style={{
-                bottom,
-                left,
-              }}
+              piece={index}
+              className={`player-piece bg-sky-500 absolute size-6 border-2 rounded-full border-black border-dashed translate-x-1`}
             />
           ))}
-
-          {/* player 2 */}
-          {[
-            {
-              top: "8.1rem",
-              right: "68px",
-            },
-            {
-              top: "8.1rem",
-              right: "8.2rem",
-            },
-            {
-              top: "4.5rem",
-              right: "68px",
-            },
-            {
-              top: "4.5rem",
-              right: "8.2rem",
-            },
-          ].map(({ top, right }, index) => (
+          {[0, 1, 2, 3].map((number, index) => (
             <div
-              // ref={(el) => (pieceRefs.current[index] = el)}
               key={index}
               player-id="P2"
-              // piece={piece}
-              className={`bg-green-500 absolute size-8 border-2 rounded-full border-black border-dashed`}
-              style={{
-                top,
-                right,
-              }}
+              className={`player-piece bg-green-500 absolute size-6 border-2 rounded-full border-black border-dashed translate-x-1`}
             />
           ))}
         </div>
-
-        {/* player bases */}
         <div>
           <div
-            className="w-[13.2rem] h-[13.2rem] border-[2.1rem] border-neutral-100/35 absolute bottom-2.5 left-2.5"
+            className="w-[10.7rem] h-[10.7rem] border-[2.1rem] border-neutral-100/35 absolute bottom-2.5 left-2.5"
             player-id="P1"
           ></div>
           <div
-            className="w-[13.2rem] h-[13.2rem] border-[2.1rem] border-neutral-100/35 absolute top-2.5 right-2.5"
+            className="w-[10.7rem] h-[10.7rem] border-[2.1rem] border-neutral-100/35 absolute top-2.5 right-2.5"
             player-id="P2"
           ></div>
         </div>

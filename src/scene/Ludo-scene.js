@@ -1,6 +1,27 @@
 import Board from "../assets/Resources/background/ludo1.png";
-// import Blue_Token from "../assets/Resources/ui/Tokens/Blue_Token.png";
 import Phaser from "phaser";
+import { COORDINATES_MAP, STEP_LENGTH } from "../constant";
+
+export let playerPiecesElements = {}; // Export the variable for later initialization
+
+export function setPiecePosition(player, piece, newPosition) {
+  if (!playerPiecesElements[player] || !playerPiecesElements[player][piece]) {
+    console.error(
+      `Player element of given player: ${player} and piece: ${piece} not found`
+    );
+    return;
+  }
+
+  const [x, y] = COORDINATES_MAP[newPosition];
+  const pieceElement = playerPiecesElements[player][piece];
+  const top = y * STEP_LENGTH + "%";
+  const left = x * STEP_LENGTH + "%";
+
+  pieceElement.style.top = top;
+  pieceElement.style.left = left;
+
+  // console.log("top:", top + " " + "left:", left);
+}
 
 class LudoScene extends Phaser.Scene {
   constructor() {
@@ -9,22 +30,16 @@ class LudoScene extends Phaser.Scene {
 
   preload() {
     this.load.image("board", Board);
-    // this.load.image("blue_token", Blue_Token);
   }
 
   create() {
-    // Get the width and height of the canvas
     const canvasWidth = this.sys.game.config.width;
     const canvasHeight = this.sys.game.config.height;
-    // Add the board image to the scene
     const board = this.add.image(0, 0, "board");
-    // Set the origin to the top-left corner (0,0)
     board.setOrigin(0, 0);
-    // Scale the image to fit within the canvas dimensions
     board.setDisplaySize(canvasWidth, canvasHeight);
 
-    // Add a blue token to the scene
-    // this.add.image(85, 460, "blue_token").scale = 0.5;
+    // setPiecePosition("P1", 0, 0);
   }
 }
 
